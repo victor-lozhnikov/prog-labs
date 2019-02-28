@@ -8,6 +8,7 @@ struct node {
     int val;
     int h;
     int diff;
+    int i;
 };
 
 int height (node* cur_node) {
@@ -28,7 +29,7 @@ node* right_rotate (node* cur_node, node** root) {
     q->right = cur_node;
     update_height(cur_node);
     update_height(q);
-    if ((*root)->val == cur_node->val) {
+    if ((*root)->i == cur_node->i) {
         *root = q;
     }
     return q;
@@ -40,7 +41,7 @@ node* left_rotate (node* cur_node, node** root) {
     q->left = cur_node;
     update_height(cur_node);
     update_height(q);
-    if ((*root)->val == cur_node->val) {
+    if ((*root)->i == cur_node->i) {
         *root = q;
     }
     return q;
@@ -66,7 +67,7 @@ node* balance (node* cur_node, node** root) {
     return cur_node;
 }
 
-node* add_vertex (node* cur_node, int val, node* free_node, node** root) {
+node* add_vertex (node* cur_node, int val, int i, node* free_node, node** root) {
     if (cur_node == NULL) {
         cur_node = free_node;
         cur_node->h = 1;
@@ -74,13 +75,14 @@ node* add_vertex (node* cur_node, int val, node* free_node, node** root) {
         cur_node->right = NULL;
         cur_node->left = NULL;
         cur_node->val = val;
+        cur_node->i = i;
         return cur_node;
     }
 
     if (val > cur_node->val) {
-        cur_node->right = add_vertex(cur_node->right, val, free_node, root);
+        cur_node->right = add_vertex(cur_node->right, val, i, free_node, root);
     } else {
-        cur_node->left = add_vertex(cur_node->left, val, free_node, root);
+        cur_node->left = add_vertex(cur_node->left, val, i, free_node, root);
     }
 
     return balance(cur_node, root);
@@ -101,13 +103,14 @@ int main() {
     nodes[0].diff = 0;
     nodes[0].right = NULL;
     nodes[0].left = NULL;
+    nodes[0].i = 0;
 
     int cur_val;
     node* root = &nodes[0];
 
     for (int i = 1; i < n; ++i) {
         scanf("%d", &cur_val);
-        add_vertex(root, cur_val, &nodes[i], &root);
+        add_vertex(root, cur_val, i, &nodes[i], &root);
     }
 
     printf("%d", root->h);
