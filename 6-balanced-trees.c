@@ -89,16 +89,23 @@ node* add_vertex (node* cur_node, int val, int i, node* free_node, node** root) 
 }
 
 int main() {
+    FILE* fin = fopen("in.txt", "r");
+    FILE* fout = fopen("out.txt", "w");
+
     int n;
-    scanf("%d", &n);
+    fscanf(fin, "%d", &n);
 
     if (n == 0) {
-        printf("0");
+        fprintf(fout, "0");
         return 0;
     }
 
     node* nodes = (node*)malloc(sizeof(node) * n);
-    scanf("%d", &nodes[0].val);
+    if (nodes == NULL) {
+        fprintf(fout, "mem error");
+        return 0;
+    }
+    fscanf(fin, "%d", &nodes[0].val);
     nodes[0].h = 1;
     nodes[0].diff = 0;
     nodes[0].right = NULL;
@@ -109,10 +116,10 @@ int main() {
     node* root = &nodes[0];
 
     for (int i = 1; i < n; ++i) {
-        scanf("%d", &cur_val);
+        fscanf(fin, "%d", &cur_val);
         add_vertex(root, cur_val, i, &nodes[i], &root);
     }
 
-    printf("%d", root->h);
+    fprintf(fout, "%d", root->h);
     return 0;
 }
